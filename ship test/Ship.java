@@ -73,8 +73,8 @@ public class Ship {
 	public void setX(int x){this.x=x;}
 	public double getY(){return y;}
 	public void setY(int y){this.y=y;}
-	public double getSpin(){return x;}
-	public void setSpin(double spin){this.x=x;}
+	public int getDirection(){return this.direction;}
+	public void setDirection(int direction){this.direction=direction;}
 	public BufferedImage getImage(){return boat;}
 	public void setLife(boolean life){this.alive=life;}
 	public boolean getLife(){return alive;}

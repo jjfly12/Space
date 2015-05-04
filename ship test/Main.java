@@ -58,7 +58,7 @@ public class Main extends JPanel implements ActionListener
 	            Graphics2D g2d = (Graphics2D)g;
 	            if (ship.getLife())
 	            {
-	            	double rotationRequired = Math.toRadians(ship.getSpin());
+	            	double rotationRequired = Math.toRadians(-ship.getDirection());
 	            	double locationX = ship.getImage().getWidth() / 2;
 	            	double locationY = ship.getImage().getHeight() / 2;
 	            	AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
