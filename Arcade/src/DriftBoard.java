@@ -103,15 +103,9 @@ public class DriftBoard extends Board implements Runnable {
         player.act();
         
         Iterator i3 = asteroids.iterator();
-        Random r = new Random();
+        
         while (i3.hasNext()) {
-            int shot = r.nextInt(12);
-            Asteroid b = (Asteroid) i3;
-            if (shot==1) 
-            {
-            	asteroids.add(new Asteroid(r.nextInt(500), r.nextInt(4)));
-            	System.out.println("Asteroid added!");
-            }
+            Asteroid b = (Asteroid) i3.next();
             int bombX = (int) b.getX();
             int bombY = (int) b.getY();
             int playerX = (int) player.getX();
@@ -136,6 +130,15 @@ public class DriftBoard extends Board implements Runnable {
 
         while (play) {
             repaint();
+            
+            Random r = new Random();
+            int shot = r.nextInt(70);
+            if (shot==1) 
+            {
+            	asteroids.add(new Asteroid(r.nextInt(400), r.nextInt(4)));
+            	System.out.println("Asteroid added! " + System.currentTimeMillis());
+            }
+            
             animationCycle();
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = 20 - timeDiff;
