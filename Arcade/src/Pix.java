@@ -6,7 +6,6 @@ public class Pix
         protected int x;
         protected int y;
         protected boolean dying;
-        protected int dx;
         public Pix() {visible = true;}
         public void die(){visible = false;}
         public boolean isVisible() {return visible;}

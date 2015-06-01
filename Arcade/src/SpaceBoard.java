@@ -17,8 +17,9 @@ import javax.swing.JPanel;
 public class SpaceBoard extends Board implements Runnable { 
     private ArrayList<Alien> aliens;
     private Player player;
-    private Bullet bullet;
-
+    private Bullet[] bullet = new Bullet[3];
+    private long timeOfLastShot = 0;
+    
     private int asX = 100;
     private int asY = 15;
     private int direction = -1;
@@ -29,7 +30,9 @@ public class SpaceBoard extends Board implements Runnable {
     
     public int w=500;
     public int h=500;
-
+    
+    public boolean hasWon = false;
+    
     public SpaceBoard() 
     {
         setFocusable(false);
@@ -43,13 +46,15 @@ public class SpaceBoard extends Board implements Runnable {
         aliens = new ArrayList<Alien>();
         for (int i=0; i < 4; i++) {
             for (int j=0; j < 6; j++) {
-                Alien alien = new Alien(asX + 20*j, asY + 20*i);
+                Alien alien = new Alien(asX + 25*j, asY + 25*i);
                 aliens.add(alien);
             }
         }
 
         player = new Player();
-        bullet = new Bullet();
+        for (int i = 0; i < 3; i++){
+        	bullet[i] = new Bullet();
+        }
         if (animator == null||!play) {
             animator = new Thread(this);
             animator.start();
@@ -79,8 +84,10 @@ public class SpaceBoard extends Board implements Runnable {
         }
     }
     public void drawShot(Graphics g) {
-        if (bullet.isVisible())
-            g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(),5,5, this);
+    	for (int i = 0; i < bullet.length; i++){
+        if (bullet[i].isVisible())
+            g.drawImage(bullet[i].getImage(), bullet[i].getX(), bullet[i].getY(),5,5, this);
+        }
     }
     public void drawBombing(Graphics g) {
         Iterator i3 = aliens.iterator();
@@ -122,6 +129,7 @@ public class SpaceBoard extends Board implements Runnable {
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString("win", (w - metr.stringWidth("win"))/2, h/2);
+        hasWon = true;
     }
     public void animationCycle()  
     {
@@ -129,34 +137,41 @@ public class SpaceBoard extends Board implements Runnable {
         {
             play = false;
             win();
+            return;
         }
         player.act();
-        if (bullet.isVisible()) 
-        {
-            Iterator it = aliens.iterator();
-            int X = bullet.getX();
-            int Y = bullet.getY();
-
-            while (it.hasNext())
-            {
-                Alien alien = (Alien) it.next();
-                int aX = alien.getX();
-                int aY = alien.getY();
-                if (alien.isVisible() && bullet.isVisible()) 
-                {
-                    if (X>=aX&&X<=aX+15&&Y>=aY&&Y<=aY+15) 
-                    {
-                            alien.setDying(true);
-                            deaths++;
-                            bullet.die();
-                    }
-                }
-            }
-            int y = bullet.getY();
-            y -= 5;
-            if (y < 0)bullet.die();
-            else bullet.setY(y);
+        Iterator it = aliens.iterator();
+        
+        for (int i = 0; i < bullet.length; i++){
+        	if (!bullet[i].isVisible())
+        		continue;
+        	System.out.print(i + " ");
+        	int X = bullet[i].getX();
+        	int Y = bullet[i].getY();
+        	
+        	while (it.hasNext())
+        	{
+        		Alien alien = (Alien) it.next();
+        		int aX = alien.getX();
+        		int aY = alien.getY();
+        		if (alien.isVisible() && bullet[i].isVisible()) 
+        		{
+        			if (X>=aX&&X<=aX+15&&Y>=aY&&Y<=aY+15) 
+        			{
+        					alien.setDying(true);
+        					deaths++;
+        					bullet[i].die();
+        			}
+        		}
+        	}
+        	
+        	int y = bullet[i].getY();
+        	y -= 5;
+        	if (y < 0)bullet[i].die();
+        	else bullet[i].setY(y);
         }
+        System.out.println();
+            
          Iterator it1 = aliens.iterator();
          while (it1.hasNext()) 
          {
@@ -183,7 +198,7 @@ public class SpaceBoard extends Board implements Runnable {
                 }
             }
         }
-        Iterator it = aliens.iterator();
+        it = aliens.iterator();
         while (it.hasNext()) {
             Alien alien = (Alien) it.next();
             if (alien.isVisible()) {
@@ -242,7 +257,8 @@ public class SpaceBoard extends Board implements Runnable {
             }
             beforeTime = System.currentTimeMillis();
         }
-        gameOver();
+        if (!hasWon)
+        	gameOver();
     }
     public void keyReleased(KeyEvent e) {
         player.keyReleased(e);
@@ -258,8 +274,12 @@ public class SpaceBoard extends Board implements Runnable {
       if (play)
       {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (!bullet.isVisible())
-                bullet = new Bullet(x, y);
+        	for (int i = 0; i < bullet.length; i++){
+        		if (!bullet[i].isVisible() && (System.currentTimeMillis() - timeOfLastShot > 1000 || timeOfLastShot == 0)){
+        			bullet[i] = new Bullet(x, y);
+        			break;
+        		}
+        	}
         }
       }
     }

@@ -19,6 +19,7 @@ public class Mainframe extends JFrame{
 	private JButton snake;
 	private JButton space;
 	private JButton text;
+	private JButton drift;
 	private JLabel score;
 	private Mainframe m = this;
 	
@@ -102,6 +103,28 @@ public class Mainframe extends JFrame{
 		text.setFocusable(false);
 		text.setPreferredSize(new Dimension(100,50));
 		holder.add(text);
+		
+		drift = new JButton("Driftgame");
+		drift.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg0) {}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			content.remove(board);
+			board = new DriftBoard();
+			content.add(board);
+			m.pack();
+			}});
+		drift.setFocusable(false);
+		drift.setPreferredSize(new Dimension(100,50));
+		holder.add(drift);
+		
 		this.add(holder);
 		this.pack();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
