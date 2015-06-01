@@ -140,7 +140,6 @@ public class SpaceBoard extends Board implements Runnable {
             return;
         }
         player.act();
-        Iterator it = aliens.iterator();
         
         for (int i = 0; i < bullet.length; i++){
         	if (!bullet[i].isVisible())
@@ -148,6 +147,8 @@ public class SpaceBoard extends Board implements Runnable {
         	System.out.print(i + " ");
         	int X = bullet[i].getX();
         	int Y = bullet[i].getY();
+        	
+            Iterator it = aliens.iterator();
         	
         	while (it.hasNext())
         	{
